@@ -201,9 +201,96 @@
       flex-shrink: 0;
     }
 
+    /* ── Request form panel ── */
+    .request-panel {
+      padding: 48px;
+      border-top: 1px solid var(--border);
+      max-width: 560px;
+    }
+
+    .form-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 28px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.12s;
+      width: 100%;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+    }
+
+    .form-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .submit-btn {
+      margin-top: 8px;
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 12px 28px;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s;
+      align-self: flex-start;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      background: var(--accent);
+      color: #0c0c0c;
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .form-status {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 12px;
+      margin-top: 12px;
+      display: none;
+    }
+
+    .form-status.success { color: #6ee7b7; display: block; }
+    .form-status.error   { color: #f87171; display: block; }
+
     /* ── Footer ── */
     footer {
       padding: 24px 48px;
+      border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -214,6 +301,11 @@
       font-size: 11px;
       color: var(--text-muted);
       letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 640px) {
+      .request-panel { padding: 40px 20px; }
+      footer { padding: 20px; }
     }
   </style>
 </head>
@@ -294,9 +386,80 @@
     </div>
   </main>
 
+  <div class="request-panel">
+    <div class="section-head">
+      <span class="section-title">Request a Link</span>
+      <span class="section-line"></span>
+    </div>
+
+    <form class="form-grid" id="requestForm" onsubmit="submitRequest(event)">
+      <div class="form-field">
+        <label class="form-label" for="requester">Your Name</label>
+        <input class="form-input" id="requester" type="text" placeholder="e.g. Tom" required />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="siteName">Site Name</label>
+        <input class="form-input" id="siteName" type="text" placeholder="e.g. Bloomberg Terminal" required />
+      </div>
+      <div class="form-field">
+        <label class="form-label" for="siteUrl">URL</label>
+        <input class="form-input" id="siteUrl" type="url" placeholder="https://..." required />
+      </div>
+      <button class="submit-btn" type="submit" id="submitBtn">Submit Request</button>
+      <div class="form-status" id="formStatus"></div>
+    </form>
+  </div>
+
   <footer>
     <span class="footer-copy">© 2026 Annamite Capital</span>
   </footer>
+
+  <script>
+    async function submitRequest(e) {
+      e.preventDefault();
+      const btn    = document.getElementById('submitBtn');
+      const status = document.getElementById('formStatus');
+      const requester = document.getElementById('requester').value.trim();
+      const siteName  = document.getElementById('siteName').value.trim();
+      const siteUrl   = document.getElementById('siteUrl').value.trim();
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+      status.className = 'form-status';
+      status.textContent = '';
+
+      try {
+        const res = await fetch('https://api.github.com/repos/ATLAS-Annamite-Capital/links/issues', {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer __LINKS_ISSUES_TOKEN__',
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': '2022-11-28',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            title: `Link Request: ${siteName}`,
+            body: `**Requested by:** ${requester}\n**Site name:** ${siteName}\n**URL:** ${siteUrl}`,
+            labels: ['link-request']
+          })
+        });
+
+        if (res.ok) {
+          status.className = 'form-status success';
+          status.textContent = 'Request submitted — thank you!';
+          document.getElementById('requestForm').reset();
+        } else {
+          throw new Error(`GitHub API error ${res.status}`);
+        }
+      } catch (err) {
+        status.className = 'form-status error';
+        status.textContent = 'Submission failed. Please try again or contact the team directly.';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Submit Request';
+      }
+    }
+  </script>
 
 </body>
 </html>
