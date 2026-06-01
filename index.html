@@ -3,239 +3,300 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Annamite Capital — Links</title>
+  <title>Annamite Capital</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg: #0c0c0c;
+      --surface: #111111;
+      --border: #1f1f1f;
+      --border-hover: #333333;
+      --text-primary: #f0f0f0;
+      --text-secondary: #888888;
+      --text-muted: #444444;
+      --accent: #c8a96e;
+      --accent-dim: rgba(200, 169, 110, 0.08);
+    }
+
+    html { scroll-behavior: smooth; }
+
     body {
       min-height: 100vh;
-      background: #0a0a0a;
-      color: #e5e5e5;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 48px 16px 64px;
+      background: var(--bg);
+      color: var(--text-primary);
+      font-family: 'Georgia', 'Times New Roman', serif;
     }
 
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .logo {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: #a3e635;
-      margin-bottom: 6px;
-    }
-
-    .title {
-      font-size: 26px;
-      font-weight: 700;
-      color: #f5f5f5;
-      letter-spacing: -0.02em;
-    }
-
-    .tagline {
-      font-size: 13px;
-      color: #737373;
-      margin-top: 6px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 460px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .section-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: #525252;
-      margin-top: 12px;
-      margin-bottom: 4px;
-      padding-left: 2px;
-    }
-
-    a.link-btn {
+    /* ── Top bar ── */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 0 48px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 100%;
-      padding: 14px 18px;
-      background: #141414;
-      border: 1px solid #262626;
-      border-radius: 10px;
-      color: #e5e5e5;
-      text-decoration: none;
-      font-size: 15px;
-      font-weight: 500;
-      transition: background 0.15s, border-color 0.15s, transform 0.1s;
-      cursor: pointer;
     }
 
-    a.link-btn:hover {
-      background: #1a1a1a;
-      border-color: #404040;
-      transform: translateY(-1px);
+    .wordmark {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-primary);
     }
 
-    a.link-btn:active {
-      transform: translateY(0);
+    .wordmark span {
+      color: var(--accent);
     }
 
-    .btn-left {
+    .header-right {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 72px 48px 56px;
+      border-bottom: 1px solid var(--border);
+      max-width: 900px;
+    }
+
+    .hero-eyebrow {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    .hero-sub {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 20px;
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    /* ── Main layout ── */
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--border);
+    }
+
+    @media (max-width: 640px) {
+      header { padding: 0 20px; }
+      .hero  { padding: 48px 20px 40px; }
+      main   { grid-template-columns: 1fr; }
+      .panel:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+    }
+
+    .panel {
+      padding: 48px;
+      border-right: 1px solid var(--border);
+    }
+
+    .panel:last-child {
+      border-right: none;
+    }
+
+    /* ── Section heading ── */
+    .section-head {
       display: flex;
-      align-items: center;
+      align-items: baseline;
       gap: 12px;
+      margin-bottom: 32px;
     }
 
-    .btn-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+    .section-title {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.24em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Link rows ── */
+    a.link-row {
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
+      justify-content: space-between;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.12s;
     }
 
-    .icon-platform { background: #16231a; }
-    .icon-agents   { background: #1a1a2e; }
-    .icon-monitor  { background: #1a1a0e; }
-    .icon-tom      { background: #1e1520; }
-    .icon-george   { background: #0f1e20; }
-    .icon-joe      { background: #1e1510; }
+    a.link-row:first-of-type {
+      border-top: 1px solid var(--border);
+    }
 
-    .btn-label {
+    a.link-row:hover {
+      color: var(--text-primary);
+    }
+
+    a.link-row:hover .row-name {
+      color: var(--accent);
+    }
+
+    a.link-row:hover .row-arrow {
+      color: var(--accent);
+      transform: translate(2px, -2px);
+    }
+
+    .row-left {
       display: flex;
       flex-direction: column;
-      gap: 1px;
+      gap: 3px;
     }
 
-    .btn-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #f5f5f5;
+    .row-name {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--text-primary);
+      transition: color 0.12s;
+      letter-spacing: -0.01em;
     }
 
-    .btn-sub {
+    .row-desc {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 11px;
-      color: #737373;
+      color: var(--text-muted);
+      letter-spacing: 0.02em;
     }
 
-    .arrow {
-      color: #525252;
-      font-size: 14px;
+    .row-arrow {
+      font-size: 16px;
+      color: var(--text-muted);
+      transition: color 0.12s, transform 0.12s;
       flex-shrink: 0;
     }
 
-    .divider {
-      height: 1px;
-      background: #1a1a1a;
-      margin: 4px 0;
+    /* ── Footer ── */
+    footer {
+      padding: 24px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
-    footer {
-      margin-top: 48px;
+    .footer-copy {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       font-size: 11px;
-      color: #404040;
+      color: var(--text-muted);
       letter-spacing: 0.05em;
     }
   </style>
 </head>
 <body>
 
-  <div class="header">
-    <div class="logo">Annamite Capital</div>
-    <div class="title">Quick Access</div>
-    <div class="tagline">Internal platforms &amp; scheduling links</div>
+  <header>
+    <div class="wordmark">Annamite <span>Capital</span></div>
+    <div class="header-right">Internal Access</div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-eyebrow">Quick Access Hub</div>
+    <h1 class="hero-title">Platforms &amp;<br><em>Scheduling</em></h1>
+    <p class="hero-sub">Direct access to internal systems, research tools, and team scheduling.</p>
   </div>
 
-  <div class="container">
-
-    <div class="section-label">Platforms</div>
-
-    <a class="link-btn" href="https://annamite.1token.tech" target="_blank" rel="noopener noreferrer">
-      <div class="btn-left">
-        <div class="btn-icon icon-platform">⚡</div>
-        <div class="btn-label">
-          <span class="btn-name">1token CAM</span>
-          <span class="btn-sub">Capital Account Management</span>
-        </div>
+  <main>
+    <div class="panel">
+      <div class="section-head">
+        <span class="section-title">Platforms</span>
+        <span class="section-line"></span>
       </div>
-      <span class="arrow">↗</span>
-    </a>
 
-    <a class="link-btn" href="https://annamiteai.com/agent" target="_blank" rel="noopener noreferrer">
-      <div class="btn-left">
-        <div class="btn-icon icon-agents">🤖</div>
-        <div class="btn-label">
-          <span class="btn-name">Agents</span>
-          <span class="btn-sub">AI Research Assistant</span>
+      <a class="link-row" href="https://annamite.1token.tech" target="_blank" rel="noopener noreferrer">
+        <div class="row-left">
+          <span class="row-name">1token CAM</span>
+          <span class="row-desc">Capital Account Management</span>
         </div>
-      </div>
-      <span class="arrow">↗</span>
-    </a>
+        <span class="row-arrow">↗</span>
+      </a>
 
-    <a class="link-btn" href="https://dz65b6ojjck5z.cloudfront.net" target="_blank" rel="noopener noreferrer">
-      <div class="btn-left">
-        <div class="btn-icon icon-monitor">📊</div>
-        <div class="btn-label">
-          <span class="btn-name">Portfolio Monitor</span>
-          <span class="btn-sub">Capital Monitor Dashboard</span>
+      <a class="link-row" href="https://annamiteai.com/agent" target="_blank" rel="noopener noreferrer">
+        <div class="row-left">
+          <span class="row-name">Agents</span>
+          <span class="row-desc">AI Research Assistant</span>
         </div>
-      </div>
-      <span class="arrow">↗</span>
-    </a>
+        <span class="row-arrow">↗</span>
+      </a>
 
-    <div class="divider"></div>
-    <div class="section-label">Book a Meeting</div>
-
-    <a class="link-btn" href="https://calendly.com/tomwgeary/30-min-meeting" target="_blank" rel="noopener noreferrer">
-      <div class="btn-left">
-        <div class="btn-icon icon-tom">📅</div>
-        <div class="btn-label">
-          <span class="btn-name">Tom</span>
-          <span class="btn-sub">30-min meeting</span>
+      <a class="link-row" href="https://dz65b6ojjck5z.cloudfront.net" target="_blank" rel="noopener noreferrer">
+        <div class="row-left">
+          <span class="row-name">Portfolio Monitor</span>
+          <span class="row-desc">Capital Monitor Dashboard</span>
         </div>
-      </div>
-      <span class="arrow">↗</span>
-    </a>
+        <span class="row-arrow">↗</span>
+      </a>
+    </div>
 
-    <a class="link-btn" href="https://calendly.com/george-rowe-annamite/30min" target="_blank" rel="noopener noreferrer">
-      <div class="btn-left">
-        <div class="btn-icon icon-george">📅</div>
-        <div class="btn-label">
-          <span class="btn-name">George</span>
-          <span class="btn-sub">30-min meeting</span>
+    <div class="panel">
+      <div class="section-head">
+        <span class="section-title">Book a Meeting</span>
+        <span class="section-line"></span>
+      </div>
+
+      <a class="link-row" href="https://calendly.com/tomwgeary/30-min-meeting" target="_blank" rel="noopener noreferrer">
+        <div class="row-left">
+          <span class="row-name">Tom</span>
+          <span class="row-desc">30-minute meeting</span>
         </div>
-      </div>
-      <span class="arrow">↗</span>
-    </a>
+        <span class="row-arrow">↗</span>
+      </a>
 
-    <a class="link-btn" href="https://calendly.com/joseph-biscomb-annamite/30min" target="_blank" rel="noopener noreferrer">
-      <div class="btn-left">
-        <div class="btn-icon icon-joe">📅</div>
-        <div class="btn-label">
-          <span class="btn-name">Joe</span>
-          <span class="btn-sub">30-min meeting</span>
+      <a class="link-row" href="https://calendly.com/george-rowe-annamite/30min" target="_blank" rel="noopener noreferrer">
+        <div class="row-left">
+          <span class="row-name">George</span>
+          <span class="row-desc">30-minute meeting</span>
         </div>
-      </div>
-      <span class="arrow">↗</span>
-    </a>
+        <span class="row-arrow">↗</span>
+      </a>
 
-  </div>
+      <a class="link-row" href="https://calendly.com/joseph-biscomb-annamite/30min" target="_blank" rel="noopener noreferrer">
+        <div class="row-left">
+          <span class="row-name">Joe</span>
+          <span class="row-desc">30-minute meeting</span>
+        </div>
+        <span class="row-arrow">↗</span>
+      </a>
+    </div>
+  </main>
 
-  <footer>© Annamite Capital</footer>
+  <footer>
+    <span class="footer-copy">© 2026 Annamite Capital</span>
+  </footer>
 
 </body>
 </html>
