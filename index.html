@@ -429,7 +429,7 @@
       </div>
       <div class="form-field">
         <label class="form-label" for="siteUrl">URL</label>
-        <input class="form-input" id="siteUrl" type="url" placeholder="https://..." required />
+        <input class="form-input" id="siteUrl" type="text" placeholder="e.g. https://example.com or app.example.com" required />
       </div>
       <button class="submit-btn" type="submit" id="submitBtn">Submit Request</button>
       <div class="form-status" id="formStatus"></div>
@@ -481,7 +481,21 @@
         }
       } catch (err) {
         status.className = 'form-status error';
-        status.textContent = `Submission failed: ${err.message}. Please try again or contact the team directly.`;
+        let errorDetail = '';
+        if (err.message.includes('Failed to fetch') || err.message.includes('NetworkError') || err.message.includes('Load failed')) {
+          errorDetail = 'Could not reach GitHub — check your internet connection and try again.';
+        } else if (err.message.includes('401') || err.message.includes('Bad credentials')) {
+          errorDetail = 'Authentication error (401). The form token may have expired — please notify the team admin.';
+        } else if (err.message.includes('403') || err.message.includes('Resource not accessible')) {
+          errorDetail = 'Permission denied (403). The form does not have write access — please notify the team admin.';
+        } else if (err.message.includes('422')) {
+          errorDetail = 'Invalid data (422). One of the fields may be empty or too long — please check and retry.';
+        } else if (err.message.includes('429')) {
+          errorDetail = 'Too many requests (429). GitHub rate limit hit — please wait a few minutes and try again.';
+        } else {
+          errorDetail = `Unexpected error: ${err.message}. Please try again or contact the team directly.`;
+        }
+        status.innerHTML = `<strong>Submission failed.</strong><br>${errorDetail}`;
       } finally {
         btn.disabled = false;
         btn.textContent = 'Submit Request';
