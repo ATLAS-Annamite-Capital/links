@@ -273,19 +273,45 @@
     }
 
     .submit-btn:disabled {
-      opacity: 0.4;
+      opacity: 0.6;
       cursor: not-allowed;
     }
 
     .form-status {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      font-size: 12px;
-      margin-top: 12px;
+      font-size: 13px;
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-left: 2px solid;
+      line-height: 1.6;
       display: none;
     }
 
-    .form-status.success { color: #6ee7b7; display: block; }
-    .form-status.error   { color: #f87171; display: block; }
+    .form-status.loading {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      display: block;
+    }
+
+    .form-status.success {
+      color: #6ee7b7;
+      border-color: #6ee7b7;
+      background: rgba(110, 231, 183, 0.05);
+      display: block;
+    }
+
+    .form-status.error {
+      color: #f87171;
+      border-color: #f87171;
+      background: rgba(248, 113, 113, 0.05);
+      display: block;
+    }
+
+    .form-status a {
+      color: inherit;
+      text-underline-offset: 3px;
+    }
 
     /* ── Footer ── */
     footer {
@@ -424,9 +450,9 @@
       const siteUrl   = document.getElementById('siteUrl').value.trim();
 
       btn.disabled = true;
-      btn.textContent = 'Submitting…';
-      status.className = 'form-status';
-      status.textContent = '';
+      btn.textContent = 'Sending…';
+      status.className = 'form-status loading';
+      status.textContent = 'Submitting your request — please wait…';
 
       try {
         const res = await fetch('https://api.github.com/repos/ATLAS-Annamite-Capital/links/issues', {
@@ -445,15 +471,17 @@
         });
 
         if (res.ok) {
+          const issue = await res.json();
           status.className = 'form-status success';
-          status.textContent = 'Request submitted — thank you!';
+          status.innerHTML = `Request submitted successfully. Your request has been logged as <a href="${issue.html_url}" target="_blank" rel="noopener noreferrer">issue #${issue.number}</a> and will be reviewed by the team.`;
           document.getElementById('requestForm').reset();
         } else {
-          throw new Error(`GitHub API error ${res.status}`);
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || `HTTP ${res.status}`);
         }
       } catch (err) {
         status.className = 'form-status error';
-        status.textContent = 'Submission failed. Please try again or contact the team directly.';
+        status.textContent = `Submission failed: ${err.message}. Please try again or contact the team directly.`;
       } finally {
         btn.disabled = false;
         btn.textContent = 'Submit Request';
